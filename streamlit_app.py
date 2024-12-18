@@ -175,13 +175,37 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
+from firebase_admin import auth
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate("")  # Path to your Firebase service account key
-firebase_admin.initialize_app(cred)
+cred = credentials.Certificate("majore-da630-64e56a73f37a.json")  # Path to your Firebase service account key
+# firebase_admin.initialize_app(cred)
+# firebaseConfig = {
+#     apiKey: "AIzaSyAhOLmdSCoZ2ATcpswSqeFjQuSjiLg4SKM",
+#     authDomain: "majore-da630.firebaseapp.com",
+#     databaseURL: "https://majore-da630-default-rtdb.firebaseio.com",
+#     projectId: "majore-da630",
+#     storageBucket: "majore-da630.firebasestorage.app",
+#     messagingSenderId: "300801355721",
+#     appId: "1:300801355721:web:d3a7551c8c5ffc1b0f4218",
+#     measurementId: "G-5N9K57XPLQ"}
+# // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+# firebaseConfig = {
+#     apiKey: "AIzaSyAhOLmdSCoZ2ATcpswSqeFjQuSjiLg4SKM",
+#     authDomain: "majore-da630.firebaseapp.com",
+#     databaseURL: "https://majore-da630-default-rtdb.firebaseio.com",
+#     projectId: "majore-da630",
+#     storageBucket: "majore-da630.firebasestorage.app",
+#     messagingSenderId: "300801355721",
+#     appId: "1:300801355721:web:d3a7551c8c5ffc1b0f4218",
+#     measurementId: "G-5N9K57XPLQ"
+# }
+
+# firebase = Firebase(firebaseConfig)
+# auth = firebase.auth()
 db = firestore.client()
 
 # Streamlit UI
@@ -195,16 +219,25 @@ if menu == "Sign Up":
     email = st.text_input("Email")
     password = st.text_input("Password", type="password")
     if st.button("Sign Up"):
-        # Save user details to Firestore
+        # try:
+        #     user = auth.create_user(email=email,password=password)
+        # # Save user details to Firestore
         db.collection("users").document(email).set({"password": password})
         st.success("Account created! Please log in.")
-
+        st.balloons()
+        # except Exception as e:
+        #     st.error(f"error: {e}")
 # Log In Page
 elif menu == "Log In":
     st.subheader("Log In to Your Account")
     email = st.text_input("Email")
     password = st.text_input("Password", type="password")
     if st.button("Log In"):
+        # try:
+        #     user = auth.get_user_by_email(email)
+        #     st.success("login successfully")
+        # except:
+        #     st.warning("login failed")    
         # Check credentials
         doc = db.collection("users").document(email).get()
         if doc.exists and doc.to_dict()["password"] == password:
