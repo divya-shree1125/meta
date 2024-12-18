@@ -3,4 +3,5 @@ pandas
 numpy
 firebase-admin
 scikit-learn
-pickle
+seaborn
+matplotlib
